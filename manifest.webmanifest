@@ -4,10 +4,10 @@
   "description": "تطبيق إدارة القاعات الرياضية",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "/manager/",
-  "scope": "/manager/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#090909",
   "theme_color": "#0a0a08",
-  "icons": [{"src":"/manager/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "icons": [{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }

@@ -15,7 +15,7 @@
     const names=["public-key.pem","online-public-key.pem"], keys=[];
     for(const name of names) {
       try {
-        const response=await fetch(`/manager/${name}`,{cache:"no-store"}); if(!response.ok)continue;
+        const response=await fetch(`/${name}`,{cache:"no-store"}); if(!response.ok)continue;
         const pem=await response.text(), encoded=pem.replace(/-----[^-]+-----|\s/g,"");
         const der=Uint8Array.from(atob(encoded),char=>char.charCodeAt(0));
         keys.push(await crypto.subtle.importKey("spki",der,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]));
@@ -308,6 +308,6 @@
   $("disconnectPc").addEventListener("click",()=>{if(!confirm("فصل هذا الهاتف عن الكمبيوتر؟ تبقى بيانات القاعة محفوظة على الكمبيوتر."))return;stopPairCamera();app.pcLink=null;app.pcRevision="";app.pcBaseSnapshot=[];app.pcPending=null;app.pcDirty=false;localStorage.removeItem(PC_LINK);loadLocalData();render();updatePcLinkControls();setMessage($("pcLinkMessage"),"تم فصل الكمبيوتر. بيانات القاعة ما زالت محفوظة عليه.");});
   $("submitBarcode").addEventListener("click",()=>scan($("barcodeInput").value));$("barcodeInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();scan(e.currentTarget.value);}});$("startScan").addEventListener("click",startCamera);$("writeNfc").addEventListener("click",writeNfc);$("exportData").addEventListener("click",exportData);$("importData").addEventListener("change",e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value="";});$("showLicense").addEventListener("click",async()=>{const code=localStorage.getItem(LICENSE);const result=code?await verifyLicense(code):null;alert(result?.valid?`الترخيص نشط${result.data.expires?` حتى ${new Date(result.data.expires).toLocaleDateString("ar-DZ")}`:""}`:"لا يوجد ترخيص فعال");});$("deleteAll").addEventListener("click",()=>{const message=app.pcLink?"سيتم حذف جميع بيانات المتدربين من الكمبيوتر الأساسي نهائيًا. لا يمكن التراجع. هل تريد المتابعة؟":"سيتم حذف جميع بيانات المتدربين المحفوظة على هذا الهاتف. لا يمكن التراجع. هل تريد المتابعة؟";if(confirm(message)){app.trainees=[];saveData();render();}});
   window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();app.deferredInstall=event;$("install").hidden=false;});$("install").addEventListener("click",async()=>{if(!app.deferredInstall)return;app.deferredInstall.prompt();await app.deferredInstall.userChoice.catch(()=>null);app.deferredInstall=null;$("install").hidden=true;});window.addEventListener("pagehide",()=>{stopCamera();stopNfc();stopPairCamera();});
-  if("serviceWorker" in navigator)navigator.serviceWorker.register("/manager/sw.js",{scope:"/manager/"}).catch(()=>{});
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(()=>{});
   loadData().finally(()=>checkLicense());window.setInterval(()=>{if(!$("licenseScreen").hidden)return;checkLicense();},60_000);window.setInterval(pollComputer,4_000);
 })();
